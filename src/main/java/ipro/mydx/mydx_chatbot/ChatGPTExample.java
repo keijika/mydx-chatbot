@@ -4,6 +4,8 @@ import okhttp3.*;
 
 import java.io.IOException;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 public class ChatGPTExample {
     public static void main(String[] args) {
         String apiKey = System.getenv("OPENAI_API_KEY");
@@ -45,4 +47,8 @@ public class ChatGPTExample {
         message.addProperty("content", content);
         return message;
     }
+    System.out.println(json.toString());  // JSONの内容を確認
+    System.out.println("Response: " + response.body().string());
+
+
 }
