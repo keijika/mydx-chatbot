@@ -1,36 +1,46 @@
-package ipro.mydx.mydx_chatbot;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.*;
+import org.springframework.beans.factory.annotation.Value;
+import com.google.gson.JsonObject;
 
 @RestController
 @CrossOrigin
 public class ChatController {
 
-    // OpenAI APIキーをプロパティファイルから注入
     @Value("${openai.api.key}")
     private String openaiApiKey;
 
     private final String API_URL = "https://api.openai.com/v1/completions";
 
-    // チャットのリクエストを受け取り、OpenAI APIを呼び出す
     @PostMapping("/api/chat")
     public String chat(@RequestBody String userMessage) {
         RestTemplate restTemplate = new RestTemplate();
+
+        // OpenAI API用のヘッダー設定
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(openaiApiKey);  // Bearerトークン方式で認証
+        headers.setBearerAuth(openaiApiKey); // Bearerトークン
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // リクエストボディの作成
-        String requestBody = "{ \"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + userMessage + "\"}]}";
+        // JSONリクエストボディ作成
+        JsonObject requestBodyJson = new JsonObject();
+        requestBodyJson.addProperty("model", "gpt-3.5-turbo");
 
-        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+        JsonObject message = new JsonObject();
+        message.addProperty("role", "user");
+        message.addProperty("content", userMessage);
 
-        // OpenAI APIにPOSTリクエストを送信
+        requestBodyJson.add("messages", new JsonArray().add(message));
+
+        HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
+
+        // リクエスト送信
         ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
 
-        return response.getBody(); // 受け取ったレスポンスの内容を返す
+        return response.getBody(); // レスポンスを返す
     }
+
 }
