@@ -42,6 +42,9 @@ public class ChatController {
 
         // リクエスト送信
         ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+        
+        // レスポンス内容をコンソールに出力
+        System.out.println(response.getBody());
 
         return response.getBody(); // レスポンスを返す
     }
