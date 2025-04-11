@@ -34,10 +34,9 @@ public class ChatController {
         message.addProperty("role", "user");
         message.addProperty("content", userMessage);
 
-        JsonArray messages = new JsonArray();
-        messages.add(message);
-
-        requestBodyJson.add("messages", messages);
+        JsonArray messagesArray = new JsonArray();
+        messagesArray.add(message);
+        requestBodyJson.add("messages", messagesArray);
 
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
@@ -46,4 +45,5 @@ public class ChatController {
 
         return response.getBody(); // レスポンスを返す
     }
+
 }
