@@ -1,14 +1,14 @@
-# ƒx[ƒXƒCƒ[ƒW‚ğw’è
+# ãƒ™ãƒ¼ã‚¹ã‚¤ãƒ¡ãƒ¼ã‚¸ã¨ã—ã¦OpenJDKã‚’æŒ‡å®š
 FROM openjdk:17-jdk-slim
 
-# ì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ğw’è
+# ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¨­å®š
 WORKDIR /app
 
-# JARƒtƒ@ƒCƒ‹‚ğƒRƒ“ƒeƒi“à‚ÉƒRƒs[
+# ã‚³ãƒ³ãƒ†ãƒŠå†…ã«JARãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚³ãƒ”ãƒ¼
 COPY target/mydx-chatbot-0.0.1-SNAPSHOT.jar /app/mydx-chatbot.jar
 
-# ƒRƒ“ƒeƒi‚Ìƒ|[ƒg8080‚ğŠJ•ú
-EXPOSE 8080
+# ãƒãƒ¼ãƒˆ10000ã‚’é–‹æ”¾
+EXPOSE 10000
 
-# JavaƒRƒ}ƒ“ƒh‚ÅƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğÀs
-CMD ["java", "-jar", "mydx-chatbot.jar"]
+# ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œ
+CMD ["java", "-jar", "/app/mydx-chatbot.jar"]
