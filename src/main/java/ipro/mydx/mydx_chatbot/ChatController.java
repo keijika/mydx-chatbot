@@ -15,7 +15,7 @@ public class ChatController {
     @Value("${openai.api.key}")
     private String openaiApiKey;
 
-    private final String API_URL = "https://api.openai.com/v1/completions";
+    private final String API_URL = "https://api.openai.com/v1/chat/completions";
 
     @PostMapping("/api/chat")
     public String chat(@RequestBody String userMessage) {
@@ -28,7 +28,7 @@ public class ChatController {
 
         // JSONリクエストボディ作成
         JsonObject requestBodyJson = new JsonObject();
-        requestBodyJson.addProperty("model", "gpt-3.5-turbo");
+        requestBodyJson.addProperty("model", "gpt-3.5-turbo"); // モデルの指定
 
         // メッセージの作成
         JsonObject message = new JsonObject();
@@ -40,13 +40,20 @@ public class ChatController {
         messagesArray.add(message);
         requestBodyJson.add("messages", messagesArray);
 
+        // 応答の最大トークン数を設定（必要なら調整）
+        requestBodyJson.addProperty("max_tokens", 100);
+
         // リクエストのエンティティを作成
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
-        // リクエスト送信
-        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+        try {
+            // リクエスト送信
+            ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
 
-        // レスポンスを返す
-        return response.getBody();
+            // レスポンスを返す
+            return response.getBody();
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
 }
