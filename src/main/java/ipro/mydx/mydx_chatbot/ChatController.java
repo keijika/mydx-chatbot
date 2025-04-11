@@ -26,18 +26,16 @@ public class ChatController {
         headers.setBearerAuth(openaiApiKey); // Bearerトークン
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // JSONリクエストボディ作成（messages形式で修正）
         JsonObject requestBodyJson = new JsonObject();
         requestBodyJson.addProperty("model", "gpt-3.5-turbo");
-
-        // ユーザーのメッセージをオブジェクトとして作成
+        
         JsonObject userMessageObject = new JsonObject();
         userMessageObject.addProperty("role", "user");
         userMessageObject.addProperty("content", userMessage);
-
-        // メッセージ配列に追加
+        
         JsonArray messagesArray = new JsonArray();
         messagesArray.add(userMessageObject);
+        
         requestBodyJson.add("messages", messagesArray);
 
         // 必要に応じて応答の最大トークン数を設定
