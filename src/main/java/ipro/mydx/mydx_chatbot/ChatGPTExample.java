@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public class ChatGPTExample {
     public static void main(String[] args) {
-        String apiKey = "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";  // 必ず自分のAPIキーに置き換えてください
+        String apiKey = "{openai.api.key}";  // 必ず自分のAPIキーに置き換えてください
         OkHttpClient client = new OkHttpClient();
 
         // JSONオブジェクトの作成
