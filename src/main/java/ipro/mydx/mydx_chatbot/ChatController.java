@@ -54,6 +54,8 @@ public class ChatController {
             // レスポンスを返す
             return response.getBody();
         } catch (Exception e) {
+            // エラーハンドリング: エラーメッセージを表示
+            System.out.println("Error occurred: " + e.getMessage());
             return "Error: " + e.getMessage();
         }
     }
