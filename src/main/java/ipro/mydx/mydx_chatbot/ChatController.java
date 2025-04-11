@@ -30,27 +30,28 @@ public class ChatController {
         // JSONリクエストボディ作成
         JsonObject requestBodyJson = new JsonObject();
         requestBodyJson.addProperty("model", "gpt-3.5-turbo");
-        
+
         JsonObject message = new JsonObject();
         message.addProperty("role", "user");
         message.addProperty("content", userMessage);
-        
-        JsonArray messagesArray = new JsonArray();
-        messagesArray.add(message);
-        
-        requestBodyJson.add("messages", messagesArray);      
 
+        requestBodyJson.add("messages", new JsonArray().add(message));
 
-        // リクエスト送信用のエンティティ作成
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
-        // OpenAI APIにリクエストを送信
-try {
-    ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
-    return response.getBody(); // 成功時のレスポンス
-} catch (HttpClientErrorException e) {
-    return "Error occurred: " + e.getResponseBodyAsString(); // エラー時のレスポンス
-}
-
+        try {
+            // リクエスト送信
+            ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+            return response.getBody(); // レスポンスを返す
+        } catch (HttpClientErrorException e) {
+            // エラー処理：OpenAI APIへのリクエストが失敗した場合
+            System.out.println("Error: " + e.getMessage());
+            return "Error: " + e.getMessage();
+        } catch (Exception e) {
+            // その他のエラー処理
+            System.out.println("An unexpected error occurred: " + e.getMessage());
+            return "An unexpected error occurred: " + e.getMessage();
+        }
     }
 }
+
