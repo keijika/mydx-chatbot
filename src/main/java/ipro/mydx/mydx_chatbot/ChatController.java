@@ -2,6 +2,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,24 +30,27 @@ public class ChatController {
         // JSONリクエストボディ作成
         JsonObject requestBodyJson = new JsonObject();
         requestBodyJson.addProperty("model", "gpt-3.5-turbo");
-
+        
         JsonObject message = new JsonObject();
         message.addProperty("role", "user");
-        message.addProperty("content", userMessage);  // ユーザーからのメッセージを追加
+        message.addProperty("content", userMessage);
+        
+        JsonArray messagesArray = new JsonArray();
+        messagesArray.add(message);
+        
+        requestBodyJson.add("messages", messagesArray);      
 
-        JsonArray messages = new JsonArray();
-        messages.add(message);
-        requestBodyJson.add("messages", messages);
 
         // リクエスト送信用のエンティティ作成
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
         // OpenAI APIにリクエストを送信
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
-            return response.getBody();
-        } catch (HttpClientErrorException e) {
-            return "Error: " + e.getMessage();  // エラーメッセージを返す
-        }
+try {
+    ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+    return response.getBody(); // 成功時のレスポンス
+} catch (HttpClientErrorException e) {
+    return "Error occurred: " + e.getResponseBodyAsString(); // エラー時のレスポンス
+}
+
     }
 }
