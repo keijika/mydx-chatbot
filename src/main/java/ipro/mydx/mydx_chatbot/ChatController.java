@@ -26,21 +26,21 @@ public class ChatController {
         headers.setBearerAuth(openaiApiKey); // Bearerトークン
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // JSONリクエストボディ作成
+        // JSONリクエストボディ作成（messages形式で修正）
         JsonObject requestBodyJson = new JsonObject();
-        requestBodyJson.addProperty("model", "gpt-3.5-turbo"); // モデルの指定
+        requestBodyJson.addProperty("model", "gpt-3.5-turbo");
 
-        // メッセージの作成
-        JsonObject message = new JsonObject();
-        message.addProperty("role", "user");
-        message.addProperty("content", userMessage);
+        // ユーザーのメッセージをオブジェクトとして作成
+        JsonObject userMessageObject = new JsonObject();
+        userMessageObject.addProperty("role", "user");
+        userMessageObject.addProperty("content", userMessage);
 
-        // メッセージを配列として追加
+        // メッセージ配列に追加
         JsonArray messagesArray = new JsonArray();
-        messagesArray.add(message);
+        messagesArray.add(userMessageObject);
         requestBodyJson.add("messages", messagesArray);
 
-        // 応答の最大トークン数を設定（必要なら調整）
+        // 必要に応じて応答の最大トークン数を設定
         requestBodyJson.addProperty("max_tokens", 100);
 
         // リクエストのエンティティを作成
@@ -49,6 +49,9 @@ public class ChatController {
         try {
             // リクエスト送信
             ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+
+            // レスポンスをログ出力（デバッグ用）
+            System.out.println("Response: " + response.getBody());
 
             // レスポンスを返す
             return response.getBody();
