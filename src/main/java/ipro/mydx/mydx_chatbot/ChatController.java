@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Value;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 @RestController
 @CrossOrigin
@@ -30,23 +30,23 @@ public class ChatController {
         JsonObject requestBodyJson = new JsonObject();
         requestBodyJson.addProperty("model", "gpt-3.5-turbo");
 
+        // メッセージの作成
         JsonObject message = new JsonObject();
         message.addProperty("role", "user");
         message.addProperty("content", userMessage);
 
+        // メッセージを配列として追加
         JsonArray messagesArray = new JsonArray();
         messagesArray.add(message);
         requestBodyJson.add("messages", messagesArray);
 
+        // リクエストのエンティティを作成
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
         // リクエスト送信
         ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
-        
-        // レスポンス内容をコンソールに出力
-        System.out.println(response.getBody());
 
-        return response.getBody(); // レスポンスを返す
+        // レスポンスを返す
+        return response.getBody();
     }
-
 }
