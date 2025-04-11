@@ -42,9 +42,11 @@ public class ChatController {
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
         // OpenAI APIにリクエストを送信
-        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
-
-        // レスポンスを返す
-        return response.getBody();
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
+            return "Error: " + e.getMessage();  // エラーメッセージを返す
+        }
     }
 }
