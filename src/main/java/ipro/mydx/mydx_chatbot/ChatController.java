@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Value;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray; // 追加: JsonArrayをインポート
 
 @RestController
 @CrossOrigin
@@ -33,7 +34,10 @@ public class ChatController {
         message.addProperty("role", "user");
         message.addProperty("content", userMessage);
 
-        requestBodyJson.add("messages", new JsonArray().add(message));
+        JsonArray messagesArray = new JsonArray(); // JsonArrayのインスタンスを作成
+        messagesArray.add(message); // メッセージを追加
+
+        requestBodyJson.add("messages", messagesArray); // メッセージをリクエストボディに追加
 
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
