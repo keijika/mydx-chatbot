@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Value;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonArray; // 追加: JsonArrayをインポート
 
 @RestController
 @CrossOrigin
@@ -32,19 +32,19 @@ public class ChatController {
 
         JsonObject message = new JsonObject();
         message.addProperty("role", "user");
-        message.addProperty("content", userMessage);
+        message.addProperty("content", userMessage);  // ユーザーからのメッセージを追加
 
-        JsonArray messagesArray = new JsonArray(); // JsonArrayのインスタンスを作成
-        messagesArray.add(message); // メッセージを追加
+        JsonArray messages = new JsonArray();
+        messages.add(message);
+        requestBodyJson.add("messages", messages);
 
-        requestBodyJson.add("messages", messagesArray); // メッセージをリクエストボディに追加
-
+        // リクエスト送信用のエンティティ作成
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
-        // リクエスト送信
+        // OpenAI APIにリクエストを送信
         ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
 
-        return response.getBody(); // レスポンスを返す
+        // レスポンスを返す
+        return response.getBody();
     }
-
 }
