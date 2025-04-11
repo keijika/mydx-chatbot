@@ -2,7 +2,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,23 +34,16 @@ public class ChatController {
         message.addProperty("role", "user");
         message.addProperty("content", userMessage);
 
-        requestBodyJson.add("messages", new JsonArray().add(message));
+        JsonArray messages = new JsonArray();
+        messages.add(message);
+
+        requestBodyJson.add("messages", messages);
 
         HttpEntity<String> entity = new HttpEntity<>(requestBodyJson.toString(), headers);
 
-        try {
-            // リクエスト送信
-            ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
-            return response.getBody(); // レスポンスを返す
-        } catch (HttpClientErrorException e) {
-            // エラー処理：OpenAI APIへのリクエストが失敗した場合
-            System.out.println("Error: " + e.getMessage());
-            return "Error: " + e.getMessage();
-        } catch (Exception e) {
-            // その他のエラー処理
-            System.out.println("An unexpected error occurred: " + e.getMessage());
-            return "An unexpected error occurred: " + e.getMessage();
-        }
+        // リクエスト送信
+        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+
+        return response.getBody(); // レスポンスを返す
     }
 }
-
